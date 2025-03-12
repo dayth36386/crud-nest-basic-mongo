@@ -10,10 +10,13 @@ export class ProductsService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
   ) {}
-  async create(createProductDto: CreateProductDto): Promise<Product> {
+  async create(
+    createProductDto: CreateProductDto,
+  ): Promise<{ statusCode: number; message: string }> {
     const createdProduct = new this.productModel(createProductDto);
     try {
-      return await createdProduct.save();
+      await createdProduct.save();
+      return { statusCode: 201, message: 'Product created successfully' };
     } catch {
       throw new NotFoundException('Create failed');
     }
